@@ -12,7 +12,7 @@
     "predev": "node scripts/prepare-ffmpeg-worker.mjs",
     "dev": "next dev --webpack -p 3000",
     "prebuild": "node scripts/prepare-ffmpeg-worker.mjs",
-    "build": "next build --webpack",
+    "build": "node scripts/build.mjs",
     "start": "next start",
     "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",

@@ -105,6 +105,10 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['firebase', '@firebase/app', '@firebase/firestore', '@firebase/auth'],
     nextScriptWorkers: false,
+    // Reduce build memory usage (https://nextjs.org/docs/app/guides/memory-usage).
+    // The production build runs on constrained hosts (~4 GB containers) where
+    // parallel workers and caches push the heap past its limit (OOM).
+    webpackMemoryOptimizations: true,
   },
 
   // Image optimization
@@ -304,7 +308,9 @@ const nextConfig = {
       config.optimization.concatenateModules = true;
 
       // Fix source map generation issues for production
-      config.devtool = 'hidden-source-map'; // Use hidden source maps to avoid browser warnings
+      // Hidden source maps disabled for the same memory budget reason as
+      // productionBrowserSourceMaps above.
+      config.devtool = false;
 
       // Ensure proper source map handling for webpack chunks
       config.output = config.output || {};
@@ -395,7 +401,10 @@ const nextConfig = {
   reactStrictMode: true,
 
   // Source map configuration - Fixed for production deployment
-  productionBrowserSourceMaps: true, // Enable source maps in production for better debugging
+  // Source maps disabled: generating them (browser + hidden) pushes the
+  // production build past the ~4 GB memory budget of constrained hosts (OOM).
+  // Re-enable on hosts with more RAM if production debugging needs them.
+  productionBrowserSourceMaps: false,
 
 
 
