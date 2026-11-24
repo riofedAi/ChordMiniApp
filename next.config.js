@@ -103,7 +103,16 @@ const nextConfig = {
 
   // Experimental features
   experimental: {
-    optimizePackageImports: ['firebase', '@firebase/app', '@firebase/firestore', '@firebase/auth'],
+    optimizePackageImports: [
+      'firebase',
+      '@firebase/app',
+      '@firebase/firestore',
+      '@firebase/auth',
+      // HeroUI's mega-barrel re-exports ~50 component packages; rewriting
+      // imports to direct paths keeps the whole barrel out of the webpack
+      // module graph (build memory + speed).
+      '@heroui/react',
+    ],
     nextScriptWorkers: false,
     // Reduce build memory usage (https://nextjs.org/docs/app/guides/memory-usage).
     // The production build runs on constrained hosts (~4 GB containers) where
@@ -376,6 +385,22 @@ const nextConfig = {
     };
 
     return config;
+  },
+
+  // Turbopack configuration (the default bundler of Next.js 16 builds).
+  // The custom `webpack` config above is ignored by Turbopack; this section
+  // ports the one piece that matters: keep firebase-admin (server-only) out
+  // of the client bundle. Everything else in the webpack fn (splitChunks,
+  // devtool, audio file-loader) is either Turbopack-native or vestigial.
+  // Setting a turbopack config also allows `next build` without --webpack.
+  turbopack: {
+    resolveAlias: {
+      'firebase-admin': { browser: 'empty' },
+      'firebase-admin/app': { browser: 'empty' },
+      'firebase-admin/auth': { browser: 'empty' },
+      'firebase-admin/storage': { browser: 'empty' },
+      'firebase-admin/firestore': { browser: 'empty' },
+    },
   },
 
   // Create the self-contained server bundle copied by the production Dockerfile.
