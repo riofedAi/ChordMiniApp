@@ -70,7 +70,7 @@
     "next": "^16.2.12",
     "node-fetch": "^3.3.2",
     "ogl": "^1.0.11",
-    "phaze-vocoder": "https://codeload.github.com/olvb/phaze/tar.gz/841f37b822c955868075072a6abe8bfad782432e",
+    "phaze-vocoder": "file:vendor/phaze-vocoder-1.0.0.tgz",
     "prism-react-renderer": "^2.4.1",
     "prismjs": "^1.30.0",
     "react": "^19.0.0",
